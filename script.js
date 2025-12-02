@@ -14,29 +14,31 @@ function saveTasks(tasks) {
 function getCurrentTime() {
   const now = new Date();
   const day = String(now.getDate()).padStart(2, "0");
-  const month = now.getMonth();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
   const year = now.getFullYear();
   const hour = String(now.getHours()).padStart(2, "0");
   const minute = String(now.getMinutes()).padStart(2, "0");
-  return `${day} ${month} ${year}, ${hour}:${minute}`;
+  return `${day}/${month}/${year}, ${hour}:${minute}`;
 }
 
 function createTaskElement(task) {
   const li = document.createElement("li");
-  const taskId = "task-" + Date.now();
+  li.dataset.id = task.id;
+
+  // add status class for CSS styling
+  li.classList.add(task.status);
 
   li.innerHTML = `
-        <input type="checkbox" class="custom-checkbox" id="${taskId}" ${
+    <input type="checkbox" class="custom-checkbox" id="task-${task.id}" ${
     task.isCompleted ? "checked" : ""
   }>
-        <label for="${taskId}" ">${task.task}</label>
-        <span class="task-time">${task.status} on ${task.time}</span>
-        <div class="task-actions">
-            <button type="button" class="edit-btn">Edit</button>
-            <button type="button" class="delete-btn">Delete</button>
-        </div>
-    `;
-
+    <label for="task-${task.id}">${task.task}</label>
+    <span class="task-time">${task.status} at ${task.time}</span>
+    <div class="task-actions">
+        <button type="button" class="edit-btn">Edit</button>
+        <button type="button" class="delete-btn">Delete</button>
+    </div>
+  `;
   return li;
 }
 
@@ -45,7 +47,12 @@ function renderTasks() {
   completedList.innerHTML = "";
 
   const tasks = getTasks();
-  tasks.forEach((task) => {
+
+  tasks.sort(function (a, b) {
+    return b.updatedAt - a.updatedAt;
+  });
+
+  tasks.forEach(function (task) {
     const newTask = createTaskElement(task);
     if (task.isCompleted) {
       completedList.appendChild(newTask);
@@ -62,9 +69,12 @@ function addTask() {
     return;
   }
 
+  const ts = Date.now();
   const newTask = {
+    id: ts,
     task: taskText,
     time: getCurrentTime(),
+    updatedAt: ts,
     isCompleted: false,
     status: "created",
   };
@@ -76,28 +86,45 @@ function addTask() {
   renderTasks();
   taskInput.value = "";
 }
-// NEED TO ADD MODIFED STATUS AND CHANGE TEXT SEARCH TO  ID SEACH (fix bugs of duplicate)
+
 function handleClickEvents(event) {
   const target = event.target;
   const li = target.closest("li");
   if (!li) return;
 
   const label = li.querySelector("label");
-  const taskText = label.innerText;
-
+  const taskText = label ? label.innerText : "";
   let tasks = getTasks();
 
   if (target.classList.contains("delete-btn")) {
-    tasks = tasks.filter((t) => t.task !== taskText);
+    const id = li.dataset.id;
+    const confirmDelete = confirm("Are you sure you want to delete this task?");
+    if (!confirmDelete) return;
+
+    tasks = tasks.filter(function (t) {
+      return t.id != id;
+    });
     saveTasks(tasks);
     renderTasks();
   } else if (target.classList.contains("edit-btn")) {
+    const id = li.dataset.id;
     const currentText = taskText;
     const newText = prompt("Edit your task:", currentText);
+
     if (newText !== null && newText.trim() !== "") {
-      tasks = tasks.map((t) =>
-        t.task === currentText ? { ...t, task: newText.trim() } : t
-      );
+      tasks = tasks.map(function (t) {
+        if (t.id == id) {
+          return {
+            ...t,
+            task: newText.trim(),
+            status: "modified",
+            time: getCurrentTime(),
+            updatedAt: Date.now(),
+          };
+        } else {
+          return t;
+        }
+      });
       saveTasks(tasks);
       renderTasks();
     }
@@ -109,15 +136,23 @@ function handleCheckboxChange(event) {
   const li = target.closest("li");
   if (!li || !target.classList.contains("custom-checkbox")) return;
 
-  const label = li.querySelector("label");
-  const taskText = label.innerText;
+  const id = li.dataset.id;
 
   let tasks = getTasks();
-  tasks = tasks.map((t) =>
-    t.task === taskText ? { ...t, isCompleted: target.checked } : t
-  );
+  tasks = tasks.map(function (t) {
+    if (t.id == id) {
+      return {
+        ...t,
+        isCompleted: target.checked,
+        status: target.checked ? "completed" : "modified",
+        time: getCurrentTime(),
+        updatedAt: Date.now(),
+      };
+    } else {
+      return t;
+    }
+  });
   saveTasks(tasks);
-
   renderTasks();
 }
 
@@ -130,10 +165,7 @@ taskInput.addEventListener("keypress", function (e) {
 
 pendingList.addEventListener("click", handleClickEvents);
 completedList.addEventListener("click", handleClickEvents);
-
 pendingList.addEventListener("change", handleCheckboxChange);
 completedList.addEventListener("change", handleCheckboxChange);
 
 renderTasks();
-
-

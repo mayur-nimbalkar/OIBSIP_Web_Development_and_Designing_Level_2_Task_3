@@ -4,11 +4,11 @@
   box-sizing: border-box;
 }
 
-body{
+body {
   font-family: sans-serif;
   background-color: #e2f5fa;
+  background-image: linear-gradient(to bottom, #9edfefe3, #e2f5fa);
 }
-
 .container h1 {
   text-align: center;
   color: #112c4e;
@@ -20,7 +20,7 @@ body{
   justify-content: center;
   gap: 10px;
   padding: 1rem;
-  margin: 0  0 20px;
+  margin: 0 0 20px;
 }
 
 #todo-task {
@@ -67,13 +67,33 @@ body{
 }
 
 .task-items li {
-  background: #4a514d25;
-  border-bottom: 1px solid #59b8797e;
-  padding: 10px 15px;
-  margin: 8px;
-  border-radius: 5px;
+  background: #ffffff;
+  border: 1px solid #d0e6e2;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border-radius: 6px;
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.task-items li:hover {
+  transform: translateY(-2px);
+  background-color: #f0fdfc;
+}
+
+.task-items li label {
+  flex: 1;
+  font-size: 16px;
+  color: #333;
+}
+
+.task-items li .task-time {
+  font-size: 13px;
+  color: #666;
+  margin-left: auto;
 }
 
 .task-actions {
@@ -82,7 +102,8 @@ body{
   gap: 5px;
 }
 
-.edit-btn, .delete-btn {
+.edit-btn,
+.delete-btn {
   padding: 5px 10px;
   cursor: pointer;
   border: 1px solid #ccc;
@@ -93,4 +114,22 @@ body{
   background-color: #dc3545;
   color: white;
   border: none;
+}
+
+.edit-btn {
+  background-color: #ffc107;
+  color: #333;
+  border: none;
+}
+
+.task-items li.created {
+  border-left: 4px solid #17a2b8;
+}
+
+.task-items li.modified {
+  border-left: 4px solid #ffc107;
+}
+
+.task-items li.completed {
+  border-left: 4px solid #28a745;
 }
