@@ -2,6 +2,8 @@ const taskInput = document.getElementById("todo-task");
 const addTaskBtn = document.getElementById("add-task-btn");
 const pendingList = document.getElementById("pending-task");
 const completedList = document.getElementById("completed-task");
+const noPending = document.getElementById("noPending");
+const noCompleted = document.getElementById("noCompleted");
 
 function getTasks() {
   return JSON.parse(localStorage.getItem("tasks")) || [];
@@ -46,20 +48,34 @@ function renderTasks() {
   pendingList.innerHTML = "";
   completedList.innerHTML = "";
 
-  const tasks = getTasks();
+  const tasks = getTasks().map((t) => ({
+    ...t,
+    updatedAt: t.updatedAt || Date.now(),
+  }));
 
   tasks.sort(function (a, b) {
     return b.updatedAt - a.updatedAt;
   });
 
-  tasks.forEach(function (task) {
-    const newTask = createTaskElement(task);
-    if (task.isCompleted) {
-      completedList.appendChild(newTask);
-    } else {
-      pendingList.appendChild(newTask);
-    }
-  });
+  const pendingTasks = tasks.filter((t) => !t.isCompleted);
+  const completedTasks = tasks.filter((t) => t.isCompleted);
+
+  if (pendingTasks.length === 0) {
+    noPending.classList.remove("hidden");
+  } else {
+    noPending.classList.add("hidden");
+    pendingTasks.forEach((task) => {
+      pendingList.appendChild(createTaskElement(task));
+    });
+  }
+  if (completedTasks.length === 0) {
+    noCompleted.classList.remove("hidden");
+  } else {
+    noCompleted.classList.add("hidden");
+    completedTasks.forEach((task) => {
+      completedList.appendChild(createTaskElement(task));
+    });
+  }
 }
 
 function addTask() {

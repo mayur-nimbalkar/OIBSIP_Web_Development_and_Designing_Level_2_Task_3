@@ -133,3 +133,15 @@ body {
 .task-items li.completed {
   border-left: 4px solid #28a745;
 }
+.empty-msg {
+  text-align: center;
+  color: #555;
+  font-style: italic;
+  padding: 12px;
+  background: #f0f8ff;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+.hidden{
+  display: none;
+}
