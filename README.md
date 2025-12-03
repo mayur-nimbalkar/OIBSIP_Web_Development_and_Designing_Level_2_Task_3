@@ -1,6 +1,6 @@
 # ✅ To-Do App
 
-![GitHub repo size](https://img.shields.io/github/repo-size/mayur-nimbalkar/OIBSIP_Web_Development_and_Designing_Level_2_Task_3)
+![GitHub repo size](https://img.shields.io/github/repo-size/mayur-nimbalkar/Basic_todo_webapp)
 ![Made with JavaScript](https://img.shields.io/badge/Made%20with-JavaScript-blue)
 
 ## 📌 Overview
@@ -46,8 +46,8 @@ You can run the app in two ways:
 ### Option 1: Clone the Repository
 
 ```bash
-git clone https://github.com/mayur-nimbalkar/OIBSIP_Web_Development_and_Designing_Level_2_Task_3.git
-cd OIBSIP_Web_Development_and_Designing_Level_2_Task_3
+git clone https://github.com/mayur-nimbalkar/Basic_todo_webapp.git
+cd Basic_todo_webapp
 ```
 
 Then open index.html in your browser.
