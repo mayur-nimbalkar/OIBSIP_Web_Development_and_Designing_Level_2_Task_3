@@ -7,9 +7,11 @@
 body {
   font-family: sans-serif;
   background-color: #e2f5fa;
+  background-repeat: no-repeat;
   background-image: linear-gradient(to bottom, #9edfefe3, #e2f5fa);
 }
 .container h1 {
+  margin-top: 2rem;
   text-align: center;
   color: #112c4e;
   padding: 1rem 0;
