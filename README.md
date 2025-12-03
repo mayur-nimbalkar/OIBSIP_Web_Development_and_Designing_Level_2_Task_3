@@ -61,7 +61,7 @@ Then open index.html in your browser.
 
 ---
 
-## 📸 DEMO PREVIEW
+## 📸 PREVIEW
 
 <img width="1918" height="1045" alt="image" src="https://github.com/user-attachments/assets/9cb5d789-5345-4672-b43a-525aec503832" />
 
